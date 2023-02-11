@@ -37,14 +37,15 @@ end cpu_tb;
 
 architecture Behavioral of cpu_tb is
 
-signal D_s, CM_RAM_s : std_logic_vector(3 downto 0);
+signal D_signal : std_logic_vector(3 downto 0);
+signal CM_RAM_s : std_logic_vector(3 downto 0);
 signal SYNC_s, CM_ROM_s, TEST_s, RESET_s, clk_f1_s, clk_f2_s : std_logic;
 
 begin
 
 procesor: entity work.top_4004
 port map(
-        D => D_s,
+        D => D_signal,
         CM_RAM => CM_RAM_s,
         SYNC => SYNC_s,
         CM_ROM => CM_ROM_s,
@@ -68,12 +69,13 @@ end process;
 stim_gen: process
 begin
     
+    D_signal<="1101","1110" after 80ns;
     SYNC_s <= '0';
     CM_ROM_s <= '0';
     clk_f1_s <= '1';
     TEST_s <= '0';
     RESET_s<= '0', '1' after 20ns;
-    D_s<= "0000", "1111" after 30ns;
+
      
 wait;
 end process;

@@ -33,7 +33,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity top_4004 is
   Port (
-        D : inout std_logic_vector(3 downto 0);
+        D : in std_logic_vector(3 downto 0);
         CM_RAM : out std_logic_vector(3 downto 0);
         SYNC : out std_logic;
         CM_ROM : out std_logic;
@@ -50,25 +50,27 @@ type state is (A1,A2,A3,M1,M2,X1,X2,X3);
 signal current_state, next_state : state := A1;
 
 type addr_reg is array (0 to 3) of std_logic_vector(11 downto 0);
-signal address_register : addr_reg;
+signal address_register : addr_reg := (others=>(others=>'0'));
 
 type regs is array (15 downto 0) of std_logic_vector(3 downto 0);
-signal register_bank : regs;
+signal register_bank : regs :=(others=>(others=>'0'));
 
 signal data_bus : std_logic_vector(3 downto 0);
 
 signal OPA, OPR : std_logic_vector(3 downto 0); 
 -- INSTRUCTION WORD
 -- OPR IS UPPER 4 BITS - OPERATION CODE
--- OPA IS LOWER 4 BITS - MODIFIER
+-- OPA IS LOWER 4 BITS - MODIFIER 
 
 signal accumulator : std_logic_vector(3 downto 0);
 
 begin
 
-    clock_process : process(clk_f2,clk_f1,RESET)
+    clock_process : process(clk_f2,RESET)
     begin
         if(RESET = '0') then
+--            OPR <= (others=>'0');
+--            OPA <= (others=>'0');
             current_state <= A1;
         else
             if(rising_edge(clk_f2)) then
@@ -77,38 +79,60 @@ begin
         end if;
     end process;
         
-    state_gen : process(current_state,address_register)
+    state_gen : process(current_state)
     begin
-       case current_state is
-       
-            when A1 =>
-                data_bus <= address_register(0)(3 downto 0); -- SENDING LOW 4 BITS TO MEMORY
-                next_state <= A2;
-            when A2 => 
-                data_bus <= address_register(0)(7 downto 4); -- SENDING LOW 4 BITS TO MEMORY
-                next_state <= A3;
-            when A3 =>
-                data_bus <= address_register(0)(11 downto 8); -- SENDING LOW 4 BITS TO MEMORY
-                next_state <= M1;
-            when M1 =>
-                OPR <= D; --LOADING OPR INTO CPU
-                next_state <= M2;
-            when M2 =>
-                OPA <= D; -- LOADING OPA INTO CPU
-                next_state <= X1;
-            when X1 =>
-                next_state <= X2;
-            when X2 =>
-                next_state <= X3;
-            when X3 =>
-                next_state <= A1;
-            when others =>
-                next_state <= A1;
-       
-       end case;
-        
+           case current_state is
+           
+                when A1 =>
+                    data_bus <= address_register(0)(3 downto 0); -- SENDING LOW 4 BITS TO MEMORY
+                    next_state <= A2;
+                when A2 => 
+                    data_bus <= address_register(0)(7 downto 4); -- SENDING LOW 4 BITS TO MEMORY
+                    next_state <= A3;
+                when A3 =>
+                    data_bus <= address_register(0)(11 downto 8); -- SENDING LOW 4 BITS TO MEMORY
+                    next_state <= M1;
+                when M1 =>
+                    OPR <= D; --LOADING OPR INTO CPU
+                    next_state <= M2;
+                when M2 =>
+                    OPA <= D; -- LOADING OPA INTO CPU
+                    next_state <= X1;
+                when X1 =>
+                    next_state <= X2;
+                when X2 =>
+                    next_state <= X3;
+                when X3 =>
+                    next_state <= A1;
+                when others =>
+                    next_state <= A1;
+           
+           end case;
     end process;
     
-CM_RAM<= OPR;
+    instruction_decode : process(OPR,OPA) -- possibly OPR
+    begin
+        if(current_state = M2)then
+            case OPR is
+                when "1101" => -- LDM
+                    accumulator <= OPA;
+                when "1010" => -- LD
+                    accumulator <= register_bank(to_integer(unsigned(OPA)));
+    --            when "1011" => -- XCH
+    --            when "1000" => -- ADD
+    --            when "1001" => -- SUB
+    --            when "0110" => -- INC
+    --            when "1100" => -- BBL
+    --            when "0011" => -- JIN
+    --            when "0010" => -- SRC
+    --            when "0011" => --FIN
+                when others =>
+                    accumulator <= "0000";
+                    
+            end case;
+        end if;
+    end process;
+    
+CM_RAM<= "0000";
 
 end Behavioral;
