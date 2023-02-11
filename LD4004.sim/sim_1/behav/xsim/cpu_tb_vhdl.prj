@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../LD4004.srcs/sources_1/new/top4004.vhd" \
+"../../../../LD4004.srcs/sim_1/new/cpu_tb.vhd" \
+
+# Do not sort compile order
+nosort
