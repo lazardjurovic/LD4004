@@ -165,5 +165,7 @@ begin
     end process;
     
 CM_RAM<= accumulator;
+SYNC <= '0';
+CM_ROM <= '0';
 
 end Behavioral;
