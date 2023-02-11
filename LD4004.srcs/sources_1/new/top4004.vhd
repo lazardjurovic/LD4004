@@ -134,6 +134,29 @@ begin
     --            when "0011" => -- JIN
     --            when "0010" => -- SRC
     --            when "0011" => --FIN
+    
+    --ACCUMULATOR GROP INSTRUCTIONS
+    
+--                when "1111" =>
+                    
+--                    case OPA is 
+--                        when "0000" => -- CLB
+--                        when "0001" => -- CLC
+--                        when "0011" => -- CMC
+--                        when "1010" => -- STC
+--                        when "0100" => -- CMA
+--                        when "0010" => -- IAC
+--                        when "1000" => -- DAC
+--                        when "0101" => -- RAL
+--                        when "0110" => -- RAR
+--                        when "0111" => -- TCC
+--                        when "1011" => -- DAA
+--                        when "1001" => -- TSC
+--                        when "1100" => -- KBP
+--                        when "1101" => -- DCL
+--                        when others => -- NOTHNG
+--                    end case;
+                    
                 when others =>
                     accumulator <= "0000";
                     
