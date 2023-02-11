@@ -62,7 +62,9 @@ signal OPA, OPR : std_logic_vector(3 downto 0);
 -- OPR IS UPPER 4 BITS - OPERATION CODE
 -- OPA IS LOWER 4 BITS - MODIFIER 
 
+signal carry_flag: std_logic := '0';
 signal accumulator : std_logic_vector(3 downto 0);
+signal alu_result : std_logic_vector(4 downto 0);
 
 begin
 
@@ -119,9 +121,15 @@ begin
                 when "1010" => -- LD
                     accumulator <= register_bank(to_integer(unsigned(OPA)));
     --            when "1011" => -- XCH
-    --            when "1000" => -- ADD
+                when "1000" => -- ADD
+                    
+                    alu_result <= std_logic_vector(('0'&unsigned( register_bank(to_integer(unsigned(OPA))))) + ('0'&unsigned(accumulator)));
+                    carry_flag <= alu_result(4);
+                    accumulator <= alu_result(3 downto 0);
+                    
     --            when "1001" => -- SUB
-    --            when "0110" => -- INC
+                when "0110" => -- INC
+                    register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + to_unsigned(1,4));
     --            when "1100" => -- BBL
     --            when "0011" => -- JIN
     --            when "0010" => -- SRC
@@ -133,6 +141,6 @@ begin
         end if;
     end process;
     
-CM_RAM<= "0000";
+CM_RAM<= accumulator;
 
 end Behavioral;

@@ -69,7 +69,7 @@ end process;
 stim_gen: process
 begin
     
-    D_signal<="1101","1110" after 80ns;
+    D_signal<="1101","0001" after 80ns, "1101" after 230ns, "0010" after 250ns;
     SYNC_s <= '0';
     CM_ROM_s <= '0';
     clk_f1_s <= '1';
