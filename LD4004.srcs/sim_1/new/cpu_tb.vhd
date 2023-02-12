@@ -69,12 +69,15 @@ end process;
 stim_gen: process
 begin
     
-    D_signal<="1101","0001" after 80ns, "1101" after 230ns, "0010" after 250ns;
+    D_signal<="0110" after 50ns,"0001" after 70ns, --INC R1
+    "0110" after 210ns, "0010" after 230ns, -- INC R2
+    "1101" after 370ns,"0011" after 390ns, -- LDM 2 (ACC <- 2)
+    "1000" after 530ns, "0001" after 550ns; -- ADD (ACC <- R1 + ACC)    
     SYNC_s <= '0';
     CM_ROM_s <= '0';
     clk_f1_s <= '1';
     TEST_s <= '0';
-    RESET_s<= '0', '1' after 20ns;
+    RESET_s<= '0', '1' after 5ns;
 
      
 wait;

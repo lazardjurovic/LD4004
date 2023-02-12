@@ -64,7 +64,6 @@ signal OPA, OPR : std_logic_vector(3 downto 0);
 
 signal carry_flag: std_logic := '0';
 signal accumulator : std_logic_vector(3 downto 0);
-signal alu_result : std_logic_vector(4 downto 0);
 
 begin
 
@@ -123,39 +122,53 @@ begin
     --            when "1011" => -- XCH
                 when "1000" => -- ADD
                     
-                    alu_result <= std_logic_vector(('0'&unsigned( register_bank(to_integer(unsigned(OPA))))) + ('0'&unsigned(accumulator)));
-                    carry_flag <= alu_result(4);
-                    accumulator <= alu_result(3 downto 0);
-                    
+                    accumulator <= std_logic_vector((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator)));
+                    if( ((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator))) > 15 ) then
+                        carry_flag <= '1';
+                    else 
+                        carry_flag <= '0';
+                    end if;
+                        
     --            when "1001" => -- SUB
                 when "0110" => -- INC
                     register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + to_unsigned(1,4));
     --            when "1100" => -- BBL
-    --            when "0011" => -- JIN
+    --            when "0011" => -- JIN depends on last bit of OPA = 0
     --            when "0010" => -- SRC
-    --            when "0011" => --FIN
+    --            when "0011" => --FIN depends on last bit of OPA = 1
     
     --ACCUMULATOR GROP INSTRUCTIONS
     
---                when "1111" =>
+               when "1111" =>
                     
---                    case OPA is 
---                        when "0000" => -- CLB
---                        when "0001" => -- CLC
---                        when "0011" => -- CMC
---                        when "1010" => -- STC
---                        when "0100" => -- CMA
---                        when "0010" => -- IAC
---                        when "1000" => -- DAC
---                        when "0101" => -- RAL
---                        when "0110" => -- RAR
---                        when "0111" => -- TCC
---                        when "1011" => -- DAA
---                        when "1001" => -- TSC
---                        when "1100" => -- KBP
---                        when "1101" => -- DCL
---                        when others => -- NOTHNG
---                    end case;
+                    case OPA is 
+                        when "0000" => -- CLB
+                            accumulator <= (others => '0');
+                            carry_flag <= '0';
+                        when "0001" => -- CLC
+                            carry_flag <= '0';
+                        when "0011" => -- CMC
+                            carry_flag <= not carry_flag;
+                        when "1010" => -- STC
+                            carry_flag <= '1';
+                        when "0100" => -- CMA
+                            accumulator <= not accumulator;
+                        when "0010" => -- IAC
+                            accumulator <= std_logic_vector(unsigned(accumulator) + 1); -- add owerflow
+                        when "1000" => -- DAC
+                            accumulator <= std_logic_vector(unsigned(accumulator) - 1); -- add borrow
+                        when "0101" => -- RAL
+                        when "0110" => -- RAR
+                        when "0111" => -- TCC
+                            accumulator(3 downto 1) <= (others=>'0');
+                            accumulator(0) <= carry_flag;
+                            carry_flag <= '0';
+                        when "1011" => -- DAA
+                        when "1001" => -- TSC
+                        when "1100" => -- KBP
+                        when "1101" => -- DCL
+                        when others => -- NOTHNG
+                    end case;
                     
                 when others =>
                     accumulator <= "0000";
