@@ -67,14 +67,24 @@ begin
     clock_process : process(clk_f2,RESET)
     begin
         if(RESET = '0') then
---            OPR <= (others=>'0');
---            OPA <= (others=>'0');
             current_state <= A1;
         else
             if(rising_edge(clk_f2)) then
                 current_state <= next_state;
             end if;
         end if;
+    end process;
+    
+    prog_counter_proc : process(clk_f2, RESET, current_state)
+    begin
+        if(RESET = '0') then
+            address_register(0) <= (others=>'0');
+        else
+            if(rising_edge(clk_f2) and current_state = X3) then
+                address_register(0) <= std_logic_vector(unsigned(address_register(0)) +1);
+            end if;
+        end if;
+    
     end process;
         
     state_gen : process(current_state)
