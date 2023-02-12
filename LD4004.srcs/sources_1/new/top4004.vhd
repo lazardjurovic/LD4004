@@ -64,6 +64,16 @@ signal accumulator : std_logic_vector(3 downto 0);
 
 begin
 
+sync_process : process(current_state)
+begin
+       
+       case current_state is
+       when X3 => SYNC <= '0';
+       when others => SYNC<= '1';
+       end case;
+
+end process;
+
     clock_process : process(clk_f2,RESET)
     begin
         if(RESET = '0') then
@@ -146,7 +156,15 @@ begin
                 when "0110" => -- INC
                     register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + 1);
     --            when "1100" => -- BBL
-    --            when "0011" => -- JIN depends on last bit of OPA = 0
+                when "0011" => -- JIN and FIN depends on last bit of OPA = 0
+                    case OPA(0) is
+                    when '0' => --FIN
+                        
+                    when '1' => -- JIN
+                        address_register(0)(7 downto 4) <= register_bank(to_integer(unsigned(OPA(4 downto 1)&'0'))); -- PM changed
+                        address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(4 downto 1)&'1'))); -- PL changed
+                    when others =>
+                    end case;
     --            when "0010" => -- SRC
     --            when "0011" => --FIN depends on last bit of OPA = 1
     
@@ -191,7 +209,6 @@ begin
     end process;
     
 CM_RAM<= accumulator;
-SYNC <= '0';
 CM_ROM <= '0';
 
 end Behavioral;
