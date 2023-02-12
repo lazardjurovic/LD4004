@@ -31,6 +31,8 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+use work.types.all;
+
 entity top_4004 is
   Port (
         D : in std_logic_vector(3 downto 0);
@@ -46,13 +48,8 @@ end top_4004;
 
 architecture Behavioral of top_4004 is 
 
-type state is (A1,A2,A3,M1,M2,X1,X2,X3);
 signal current_state, next_state : state := A1;
-
-type addr_reg is array (0 to 3) of std_logic_vector(11 downto 0);
 signal address_register : addr_reg := (others=>(others=>'0'));
-
-type regs is array (15 downto 0) of std_logic_vector(3 downto 0);
 signal register_bank : regs :=(others=>(others=>'0'));
 
 signal data_bus : std_logic_vector(3 downto 0);

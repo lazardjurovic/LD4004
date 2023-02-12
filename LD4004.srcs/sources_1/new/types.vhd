@@ -35,4 +35,6 @@ package types is
     type state is (A1,A2,A3,M1,M2,X1,X2,X3);
     type addr_reg is array (0 to 3) of std_logic_vector(11 downto 0);
     type regs is array (15 downto 0) of std_logic_vector(3 downto 0);
+    type rom_mem is array(0 to 4095) of std_logic_vector(7 downto 0);
+    type rom_state is (ADDR1, ADDR2, ADDR3, O1, O2);
 end types;
