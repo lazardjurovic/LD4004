@@ -111,7 +111,7 @@ begin
            end case;
     end process;
     
-    instruction_decode : process(OPR,OPA) -- possibly OPR
+    instruction_decode : process(OPR,OPA,current_state) -- possibly OPR
     begin
         if(current_state = M2)then
             case OPR is
@@ -122,16 +122,22 @@ begin
     --            when "1011" => -- XCH
                 when "1000" => -- ADD
                     
-                    accumulator <= std_logic_vector((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator)));
+                    accumulator <= std_logic_vector((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator))); -- add carry flag addition
                     if( ((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator))) > 15 ) then
                         carry_flag <= '1';
                     else 
                         carry_flag <= '0';
                     end if;
                         
-    --            when "1001" => -- SUB
+                when "1001" => -- SUB
+                     accumulator <= std_logic_vector((unsigned( not register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator)));  -- add carry flag addition
+                     if( (unsigned( register_bank(to_integer(unsigned(OPA))))) > (unsigned(accumulator)) ) then
+                        carry_flag <= '1';
+                     else
+                        carry_flag <= '0';
+                     end if;
                 when "0110" => -- INC
-                    register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + to_unsigned(1,4));
+                    register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + 1);
     --            when "1100" => -- BBL
     --            when "0011" => -- JIN depends on last bit of OPA = 0
     --            when "0010" => -- SRC
