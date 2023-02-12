@@ -111,7 +111,7 @@ begin
            end case;
     end process;
     
-    instruction_decode : process(OPR,OPA,current_state) -- possibly OPR
+    instruction_decode : process(OPR,OPA) -- possibly OPR
     begin
         if(current_state = M2)then
             case OPR is
