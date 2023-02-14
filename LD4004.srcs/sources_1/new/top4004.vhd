@@ -85,13 +85,14 @@ end process;
         end if;
     end process;
     
-    prog_counter_proc : process(clk_f2, RESET, current_state)
+    prog_counter_proc : process(clk_f2, RESET,current_state)
     begin
         if(RESET = '0') then
-            address_register(0) <= (others=>'0');
+            address_register <= (others=>(others => '0'));
         else
             if(rising_edge(clk_f2) and current_state = X3) then
-                address_register(0) <= std_logic_vector(unsigned(address_register(0)) +1);
+                address_register(0) <= std_logic_vector(unsigned(address_register(0)) + to_unsigned(1,12));
+            else null;
             end if;
         end if;
     
@@ -128,7 +129,7 @@ end process;
            end case;
     end process;
     
-    instruction_decode : process(OPR,OPA) -- possibly OPR
+    instruction_decode : process(current_state) -- possibly OPR
     begin
         if(current_state = M2)then
             case OPR is
@@ -201,10 +202,10 @@ end process;
                         when others => -- NOTHNG
                     end case;
                     
-                when others =>
-                    accumulator <= "0000";
+                when others => null;
                     
             end case;
+        else null;
         end if;
     end process;
     
