@@ -60,10 +60,10 @@ signal OPA, OPR : std_logic_vector(3 downto 0);
 -- OPA IS LOWER 4 BITS - MODIFIER 
 
 signal long_instr : std_logic := '0';  -- signal indicating that instruction takes 2 bytes
-signal high_bits : std_logic_vector(3 downto 0); -- content of OPA register for 2 byte instrucitons
+signal high_bits : std_logic_vector(3 downto 0) := (others => '0'); -- content of OPA register for 2 byte instrucitons
 
 signal carry_flag: std_logic := '0';
-signal accumulator : std_logic_vector(3 downto 0);
+signal accumulator : std_logic_vector(3 downto 0) := (others => '0');
 
 begin
 
@@ -108,7 +108,7 @@ end process;
                     when others => null;
                 end case; 
                 
-            elsif(long_instr = '1' and current_state = M1 and rising_edge(clk_f2)) then
+            elsif(long_instr = '1' and current_state = M1 and rising_edge(clk_f2)) then -- JUN
                     address_register(0) <= high_bits & OPR & OPA;
             else null;
             
@@ -117,9 +117,11 @@ end process;
     
     end process;       
     
-    li_process : process(long_instr)
+    long_instr_process : process(long_instr, RESET)
     begin
-        if(current_state = M2 and long_instr = '1') then
+        if(RESET = '0') then
+            high_bits <= (others => '0');
+        elsif(current_state = M2 and long_instr = '1') then
             high_bits <= OPA;
         else null;
         end if;
