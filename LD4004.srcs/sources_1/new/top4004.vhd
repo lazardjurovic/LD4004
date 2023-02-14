@@ -92,6 +92,15 @@ end process;
         else
             if(rising_edge(clk_f2) and current_state = X3) then
                 address_register(0) <= std_logic_vector(unsigned(address_register(0)) + to_unsigned(1,12));
+            elsif(OPR = "0011" and current_state = M2) then -- JIN and FIN depends on last bit of OPA = 0)   OPERATION ON address_register in M@ phase
+                case OPA(0) is
+                    when '0' => --FIN
+                        
+                    when '1' => -- JIN
+                        address_register(0)(7 downto 4) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'0'))); -- PM changed
+                        address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'1'))); -- PL changed
+                    when others => null;
+                end case; 
             else null;
             end if;
         end if;
@@ -156,16 +165,7 @@ end process;
                      end if;
                 when "0110" => -- INC
                     register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + 1);
-    --            when "1100" => -- BBL
-                when "0011" => -- JIN and FIN depends on last bit of OPA = 0
-                    case OPA(0) is
-                    when '0' => --FIN
-                        
-                    when '1' => -- JIN
-                        address_register(0)(7 downto 4) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'0'))); -- PM changed
-                        address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'1'))); -- PL changed
-                    when others =>
-                    end case;
+    --            when "1100" => -- BBL            
     --            when "0010" => -- SRC
     --            when "0011" => --FIN depends on last bit of OPA = 1
     
