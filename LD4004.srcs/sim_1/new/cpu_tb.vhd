@@ -75,10 +75,12 @@ begin
     "1101" after 370ns,"0011" after 390ns, -- LDM 2 (ACC <- 3)
     "1000" after 530ns, "0001" after 550ns, -- ADD (ACC <- R1 + ACC) = 4
     "0100" after 690ns, "1111" after 710ns; -- JUN 0xFFF
+--    "0100" after 50ns, "1111" after 70ns; -- JUN 0xFFF
+
     CM_ROM_s <= '0';
     clk_f1_s <= '1';
     TEST_s <= '0';
-    RESET_s<= '0', '1' after 5ns;
+    RESET_s<= '1';
 
      
 wait;

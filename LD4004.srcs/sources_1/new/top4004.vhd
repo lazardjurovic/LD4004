@@ -90,14 +90,14 @@ end process;
     
     prog_counter_proc : process(clk_f2, RESET,current_state)
     begin
-        if(RESET = '0') then
+        if(RESET = '0') then -- Reseting current state 
             address_register <= (others=>(others => '0'));
         else
-            if(rising_edge(clk_f2) and current_state = A3) then -- Program counter is updated in fetch phase 
+            if(rising_edge(clk_f2) and current_state = X3) then -- Program counter is updated in fetch phase 
                 address_register(0) <= std_logic_vector(unsigned(address_register(0)) + to_unsigned(1,12));       
         end if;
                 
-        if(OPR = "0011" and current_state = M2) then -- JIN and FIN depends on last bit of OPA = 0)   OPERATION ON address_register in M@ phase
+        if(OPR = "0011" and current_state = M2 and rising_edge(clk_f2)) then -- JIN and FIN depends on last bit of OPA = 0)   OPERATION ON address_register in M@ phase
                 
                 case OPA(0) is
                     when '0' => --FIN
@@ -108,7 +108,7 @@ end process;
                     when others => null;
                 end case; 
                 
-            elsif(long_instr = '1' and current_state = M2) then
+            elsif(long_instr = '1' and current_state = M1 and rising_edge(clk_f2)) then
                     address_register(0) <= high_bits & OPR & OPA;
             else null;
             
@@ -119,10 +119,10 @@ end process;
     
     li_process : process(long_instr)
     begin
-    if(current_state = M2 and long_instr = '1') then
-        high_bits <= OPA;
-    else null;
-    end if;
+        if(current_state = M2 and long_instr = '1') then
+            high_bits <= OPA;
+        else null;
+        end if;
     end process;
         
     next_state_gen : process(current_state)
@@ -156,7 +156,7 @@ end process;
            end case;
     end process;
     
-    instruction_decode : process(OPA) -- possibly OPR 
+    instruction_decode : process(OPA)
     begin
         if(current_state = M2)then
             case OPR is
