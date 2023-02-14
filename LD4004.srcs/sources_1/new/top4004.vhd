@@ -59,6 +59,9 @@ signal OPA, OPR : std_logic_vector(3 downto 0);
 -- OPR IS UPPER 4 BITS - OPERATION CODE
 -- OPA IS LOWER 4 BITS - MODIFIER 
 
+signal long_instr : std_logic := '0';  -- signal indicating that instruction takes 2 bytes
+signal high_bits : std_logic_vector(3 downto 0); -- content of OPA register for 2 byte instrucitons
+
 signal carry_flag: std_logic := '0';
 signal accumulator : std_logic_vector(3 downto 0);
 
@@ -90,7 +93,7 @@ end process;
         if(RESET = '0') then
             address_register <= (others=>(others => '0'));
         else
-            if(rising_edge(clk_f2) and current_state = X3) then
+            if(rising_edge(clk_f2) and current_state = A3) then -- Program counter is updated in fetch phase 
                 address_register(0) <= std_logic_vector(unsigned(address_register(0)) + to_unsigned(1,12));
             elsif(OPR = "0011" and current_state = M2) then -- JIN and FIN depends on last bit of OPA = 0)   OPERATION ON address_register in M@ phase
                 case OPA(0) is
@@ -101,13 +104,15 @@ end process;
                         address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'1'))); -- PL changed
                     when others => null;
                 end case; 
+            elsif(long_instr = '1' and current_state = M2) then
+                    address_register(0) <= high_bits & OPR & OPA;
             else null;
             end if;
         end if;
     
     end process;
         
-    state_gen : process(current_state)
+    next_state_gen : process(current_state)
     begin
            case current_state is
            
@@ -144,11 +149,13 @@ end process;
             case OPR is
                 when "1101" => -- LDM
                     accumulator <= OPA;
+                    long_instr <= '0';
                 when "1010" => -- LD
                     accumulator <= register_bank(to_integer(unsigned(OPA)));
+                    long_instr <= '0';
     --            when "1011" => -- XCH
                 when "1000" => -- ADD
-                    
+                    long_instr <= '0';
                     accumulator <= std_logic_vector((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator))); -- add carry flag addition
                     if( ((unsigned( register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator))) > 15 ) then
                         carry_flag <= '1';
@@ -157,6 +164,7 @@ end process;
                     end if;
                         
                 when "1001" => -- SUB
+                     long_instr <= '0';
                      accumulator <= std_logic_vector((unsigned( not register_bank(to_integer(unsigned(OPA))))) + (unsigned(accumulator)));  -- add carry flag addition
                      if( (unsigned( register_bank(to_integer(unsigned(OPA))))) > (unsigned(accumulator)) ) then
                         carry_flag <= '1';
@@ -164,6 +172,7 @@ end process;
                         carry_flag <= '0';
                      end if;
                 when "0110" => -- INC
+                    long_instr <= '0';
                     register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + 1);
     --            when "1100" => -- BBL            
     --            when "0010" => -- SRC
@@ -172,7 +181,7 @@ end process;
     --ACCUMULATOR GROP INSTRUCTIONS
     
                when "1111" =>
-                    
+                    long_instr <= '0';
                     case OPA is 
                         when "0000" => -- CLB
                             accumulator <= (others => '0');
@@ -199,9 +208,16 @@ end process;
                         when "1001" => -- TSC
                         when "1100" => -- KBP
                         when "1101" => -- DCL
-                        when others => -- NOTHNG
+                        when others => null;-- NOTHNG
                     end case;
-                    
+ -- TWO WORD INSTRUCTIONS     
+                when "0100" => 
+                    long_instr <= '1';
+                    high_bits <= OPA;
+--                when "0101" => -- JMS
+--                when "0001" => -- JCN
+--                when "0111" => -- ISZ
+--                when "0010" => -- FIM                  
                 when others => null;
                     
             end case;
