@@ -161,8 +161,8 @@ end process;
                     when '0' => --FIN
                         
                     when '1' => -- JIN
-                        address_register(0)(7 downto 4) <= register_bank(to_integer(unsigned(OPA(4 downto 1)&'0'))); -- PM changed
-                        address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(4 downto 1)&'1'))); -- PL changed
+                        address_register(0)(7 downto 4) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'0'))); -- PM changed
+                        address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'1'))); -- PL changed
                     when others =>
                     end case;
     --            when "0010" => -- SRC
