@@ -35,7 +35,7 @@ use work.types.all;
 
 entity top_4004 is
   Port (
-        D : in std_logic_vector(3 downto 0);
+        D : inout std_logic_vector(3 downto 0);
         CM_RAM : out std_logic_vector(3 downto 0);
         SYNC : out std_logic;
         CM_ROM : out std_logic;
@@ -52,8 +52,6 @@ signal current_state, next_state : state := A1;
 signal address_register : addr_reg := (others=>(others=>'0'));
 signal register_bank : regs :=(others=>(others=>'0'));
 
-signal data_bus : std_logic_vector(3 downto 0);
-
 signal OPA, OPR : std_logic_vector(3 downto 0); 
 -- INSTRUCTION WORD
 -- OPR IS UPPER 4 BITS - OPERATION CODE
@@ -66,13 +64,12 @@ signal carry_flag: std_logic := '0';
 signal accumulator : std_logic_vector(3 downto 0) := (others => '0');
 
 begin
-
-sync_process : process(current_state)
-begin
-       
+    
+    sync_process : process(current_state)
+    begin
        case current_state is
-       when X3 => SYNC <= '0';
-       when others => SYNC<= '1';
+           when X3 => SYNC <= '0';
+           when others => SYNC<= '1';
        end case;
 
 end process;
@@ -126,35 +123,40 @@ end process;
         else null;
         end if;
     end process;
+    
+--    bus_driver: process(current_state)
+--    begin
+--        case current_state is
+--            when A1 => D <= address_register(0)(3 downto 0); -- SENDING LOW 4 BITS TO MEMORY
+--            when A2 => D <= address_register(0)(7 downto 4); -- SENDING LOW 4 BITS TO MEMORY
+--            when A3 => D <= address_register(0)(11 downto 8); -- SENDING LOW 4 BITS TO MEMORY
+--            when others => null;
+--        end case;
+--    end process;  
+
+    D<= "ZZZZ";
+    
+    regs_process: process(current_state)
+    begin
+        case current_state is
+            when M1 => OPR <= D;
+            when M2 => OPA <= D;
+            when others => null;
+        end case;
+    end process;  
         
     next_state_gen : process(current_state)
     begin
            case current_state is
-           
-                when A1 =>
-                    data_bus <= address_register(0)(3 downto 0); -- SENDING LOW 4 BITS TO MEMORY
-                    next_state <= A2;
-                when A2 => 
-                    data_bus <= address_register(0)(7 downto 4); -- SENDING LOW 4 BITS TO MEMORY
-                    next_state <= A3;
-                when A3 =>
-                    data_bus <= address_register(0)(11 downto 8); -- SENDING LOW 4 BITS TO MEMORY
-                    next_state <= M1;
-                when M1 =>
-                    OPR <= D; --LOADING OPR INTO CPU
-                    next_state <= M2;
-                when M2 =>
-                    OPA <= D; -- LOADING OPA INTO CPU
-                    next_state <= X1;
-                when X1 =>
-                    next_state <= X2;
-                when X2 =>
-                    next_state <= X3;
-                when X3 =>
-                    next_state <= A1;
-                when others =>
-                    next_state <= A1;
-           
+                when A1 =>next_state <= A2;
+                when A2 => next_state <= A3;
+                when A3 => next_state <= M1;
+                when M1 => next_state <= M2;
+                when M2 => next_state <= X1;
+                when X1 => next_state <= X2;
+                when X2 => next_state <= X3;
+                when X3 => next_state <= A1;
+                when others => next_state <= A1;
            end case;
     end process;
     
