@@ -72,7 +72,7 @@ begin
            when others => SYNC<= '1';
        end case;
 
-end process;
+    end process;
 
     clock_process : process(clk_f2,RESET)
     begin
@@ -104,11 +104,9 @@ end process;
                         address_register(0)(3 downto 0) <= register_bank(to_integer(unsigned(OPA(3 downto 1)&'1'))); -- PL changed
                     when others => null;
                 end case; 
-                
-            elsif(long_instr = '1' and current_state = M1 and rising_edge(clk_f2)) then -- JUN
+         end if;       
+         if(long_instr = '1' and current_state = M1 and rising_edge(clk_f2)) then -- JUN
                     address_register(0) <= high_bits & OPR & OPA;
-            else null;
-            
             end if;
         end if;
     
@@ -130,7 +128,7 @@ end process;
 --            when A1 => D <= address_register(0)(3 downto 0); -- SENDING LOW 4 BITS TO MEMORY
 --            when A2 => D <= address_register(0)(7 downto 4); -- SENDING LOW 4 BITS TO MEMORY
 --            when A3 => D <= address_register(0)(11 downto 8); -- SENDING LOW 4 BITS TO MEMORY
---            when others => null;
+--            when others => D<= "ZZZZ";
 --        end case;
 --    end process;  
 
