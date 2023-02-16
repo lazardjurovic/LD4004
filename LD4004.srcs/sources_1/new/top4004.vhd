@@ -63,6 +63,8 @@ signal high_bits : std_logic_vector(3 downto 0) := (others => '0'); -- content o
 signal carry_flag: std_logic := '0';
 signal accumulator : std_logic_vector(3 downto 0) := (others => '0');
 
+signal bus_in, bus_out : std_logic_vector(3 downto 0);
+
 begin
     
     sync_process : process(current_state)
@@ -121,24 +123,20 @@ begin
         else null;
         end if;
     end process;
+ -- TRI-STATE LOGIC FOR INOUT PORT
+    D   <= bus_out when (current_state = A1 or current_state = A1 or current_state = A1) else "ZZZZ";
+    bus_in <= D;
     
---    bus_driver: process(current_state)
---    begin
---        case current_state is
---            when A1 => D <= address_register(0)(3 downto 0); -- SENDING LOW 4 BITS TO MEMORY
---            when A2 => D <= address_register(0)(7 downto 4); -- SENDING LOW 4 BITS TO MEMORY
---            when A3 => D <= address_register(0)(11 downto 8); -- SENDING LOW 4 BITS TO MEMORY
---            when others => D<= "ZZZZ";
---        end case;
---    end process;  
-
-    D<= "ZZZZ";
-    
+-- GENERATING TRI-STATE BUS OUTPUTS   
+   bus_out <= address_register(0)(3 downto 0) when current_state = A1 else
+   address_register(0)(7 downto 4) when current_state = A2 else
+   address_register(0)(11 downto 8) when current_state = A3;
+   
     regs_process: process(current_state)
     begin
         case current_state is
-            when M1 => OPR <= D;
-            when M2 => OPA <= D;
+            when M1 => OPR <= bus_in;
+            when M2 => OPA <= bus_in;
             when others => null;
         end case;
     end process;  
