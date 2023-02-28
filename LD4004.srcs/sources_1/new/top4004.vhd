@@ -123,23 +123,27 @@ begin
         else null;
         end if;
     end process;
- -- TRI-STATE LOGIC FOR INOUT PORT
-    D   <= bus_out when (current_state = A1 or current_state = A1 or current_state = A1) else "ZZZZ";
-    bus_in <= D;
     
--- GENERATING TRI-STATE BUS OUTPUTS   
+    -- GENERATING TRI-STATE BUS OUTPUTS   
    bus_out <= address_register(0)(3 downto 0) when current_state = A1 else
    address_register(0)(7 downto 4) when current_state = A2 else
-   address_register(0)(11 downto 8) when current_state = A3;
-   
-    regs_process: process(current_state)
-    begin
-        case current_state is
-            when M1 => OPR <= bus_in;
-            when M2 => OPA <= bus_in;
-            when others => null;
-        end case;
-    end process;  
+   address_register(0)(11 downto 8) when current_state = A3 else "ZZZZ";
+    
+ -- TRI-STATE LOGIC FOR INOUT PORT
+    D   <= bus_out when (current_state = A1 or current_state = A2 or current_state = A3) else "ZZZZ";
+    bus_in <= D when(current_state = M1 or current_state = M2) else "ZZZZ";
+    
+    OPR <= bus_in when current_state = M1 and falling_edge(clk_f2); 
+    OPA <= bus_in when current_state = M2;
+    
+--    regs_process: process(current_state)
+--    begin
+--        case current_state is
+--            when M1 => OPR <= bus_in;
+--            when M2 => OPA <= bus_in;
+--            when others => null;
+--        end case;
+--    end process;  
         
     next_state_gen : process(current_state)
     begin
