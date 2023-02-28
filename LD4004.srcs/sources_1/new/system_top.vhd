@@ -44,7 +44,6 @@ architecture Behavioral of system_top is
 
 signal data_s : std_logic_vector(3 downto 0);
 signal sync_s : std_logic;
-signal address_s : std_logic_vector(3 downto 0);
 
 begin
 
@@ -53,18 +52,17 @@ port map(
     active => sync_s,
     reset => reset,
     clk => clk_f2,
-    address => address_s,
+    address => data_s,
     data => data_s
 );
 
 cpu: entity work.top_4004
 port map(
 D => data_s,
-address => address_s,
 CM_RAM => CM_RAM,
 SYNC => sync_s,
 CM_ROM => open,
-TEST => open,
+TEST => '1',
 RESET => reset,
 clk_f1 => clk_f1,
 clk_f2 => clk_f2

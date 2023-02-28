@@ -1,2 +1,4 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/cpu_tb.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'cpu_tb'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/ROM_memory.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'ROM_memory'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/ROM_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'ROM_tb'
