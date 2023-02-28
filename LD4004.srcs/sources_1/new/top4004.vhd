@@ -184,7 +184,6 @@ begin
                     register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + 1);
     --            when "1100" => -- BBL            
     --            when "0010" => -- SRC
-    --            when "0011" => --FIN depends on last bit of OPA = 1
     
     --ACCUMULATOR GROP INSTRUCTIONS
     
@@ -213,7 +212,19 @@ begin
                             accumulator(0) <= carry_flag;
                             carry_flag <= '0';
                         when "1011" => -- DAA
+                            if(unsigned(accumulator) > 9 or carry_flag = '1') then
+                                accumulator <= std_logic_vector(unsigned(accumulator)+6);
+                            end if;
+                            if((unsigned(accumulator)+6) > 15) then
+                                carry_flag <= '1';
+                            end if;  
                         when "1001" => -- TSC
+                            if(carry_flag = '0') then
+                                accumulator <= "1001";
+                            else
+                                accumulator <= "1010";
+                            end if;
+                            carry_flag <= '0';
                         when "1100" => -- KBP
                         when "1101" => -- DCL
                         when others => null;-- NOTHNG
