@@ -52,7 +52,6 @@ port map(
     active => sync_s,
     reset => reset,
     clk => clk_f2,
-    address => data_s,
     data => data_s
 );
 
