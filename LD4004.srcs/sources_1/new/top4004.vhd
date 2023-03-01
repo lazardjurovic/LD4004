@@ -127,10 +127,13 @@ begin
         end if;
     end process;
     
+    CM_ROM <= '1' when src_active = '1' and current_state = X2 else '0';
+    
     -- GENERATING TRI-STATE BUS OUTPUTS   
    bus_out <= address_register(0)(3 downto 0) when current_state = A1 else
                address_register(0)(7 downto 4) when current_state = A2 else
                address_register(0)(11 downto 8) when current_state = A3 else 
+               OPA when current_state = X1 else -- from datasheet
                src_addr&'0' when (current_state = X2) else --and src_active = '1') else
                src_addr&'1' when (current_state = X3) else "ZZZZ";--and src_active = '1') else "ZZZZ";
     
@@ -263,8 +266,5 @@ begin
        end if;
         
     end process;
-    
-CM_RAM<= accumulator;
-CM_ROM <= '0';
-
+ 
 end Behavioral;

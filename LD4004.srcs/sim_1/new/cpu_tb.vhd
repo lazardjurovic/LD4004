@@ -72,15 +72,14 @@ begin
     "0110" after 50ns,"0001" after 70ns, "ZZZZ" after 90ns, --INC R1
     "0110" after 210ns, "0010" after 230ns,"ZZZZ" after 250ns, -- INC R2
     "1101" after 370ns,"0100" after 390ns,"ZZZZ" after 410ns, -- LDM 4 (ACC <- 4)
-    "1000" after 530ns, "0001" after 550ns, "ZZZZ" after 570ns, -- ADD (ACC <- R1 + ACC) = 5
-    "0100" after 690ns, "1111" after 710ns, "ZZZZ" after 730ns, -- JUN 0xFFF
-    "0110" after 850ns,"0011" after 870ns, "ZZZZ" after 890ns, --INC R3 -- for testing long_isntr flag
-    "0010" after 1010ns, "1111" after 1030ns, "ZZZZ" after 1050ns; -- SRC 11
-
-    CM_ROM_s <= '0';
+    "1000" after 530ns, "0001" after 550ns, "ZZZZ" after 570ns; -- ADD (ACC <- R1 + ACC) = 5
+    --"0100" after 690ns, "1111" after 710ns, "ZZZZ" after 730ns, -- JUN 0xFFF needs two cycles
+    --"0110" after 1010ns,"0011" after 1030ns, "ZZZZ" after 1050ns, --INC R3 -- for testing long_isntr flag
+    --"0010" after 1170ns, "1111" after 1190ns, "ZZZZ" after 1210ns; -- SRC 1111, should send 0xF and 0xE on bus
+    
     clk_f1_s <= '1';
     TEST_s <= '0';
-    RESET_s<= '1';
+    RESET_s<= '1', '0' after 690ns;
 
      
 wait;

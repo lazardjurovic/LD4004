@@ -3,9 +3,9 @@
 Apr 18 2022
 16:05:34
 C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/ROM_tb.vhd,1677598043,vhdl2008,,,,rom_tb,,,,,,,,
-C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/cpu_tb.vhd,1677703515,vhdl2008,,,,cpu_tb,,,,,,,,
+C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/cpu_tb.vhd,1677705494,vhdl2008,,,,cpu_tb,,,,,,,,
 C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/system_tb.vhd,1676407083,vhdl2008,,,,system_tb,,,,,,,,
 C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/ROM_memory.vhd,1677600612,vhdl2008,C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/system_top.vhd,,,rom_memory,,,,,,,,
 C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/system_top.vhd,1677600702,vhdl2008,C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/system_tb.vhd,,,system_top,,,,,,,,
-C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/top4004.vhd,1677703484,vhdl2008,C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/cpu_tb.vhd,,,top_4004,,,,,,,,
+C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/top4004.vhd,1677705459,vhdl2008,C:/Users/lazar/LD4004/LD4004.srcs/sim_1/new/cpu_tb.vhd,,,top_4004,,,,,,,,
 C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/types.vhd,1676221023,vhdl,C:/Users/lazar/LD4004/LD4004.srcs/sources_1/new/top4004.vhd,,,types,,,,,,,,
