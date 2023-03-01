@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,000.001 ns"></ZoomEndTime>
-      <Cursor1Time time="619.835 ns"></Cursor1Time>
+      <ZoomEndTime time="483.001 ns"></ZoomEndTime>
+      <Cursor1Time time="150.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="400"></NameColumnWidth>
-      <ValueColumnWidth column_width="182"></ValueColumnWidth>
+      <ValueColumnWidth column_width="176"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="11" />
+   <WVObjectSize size="16" />
    <wvobject fp_name="/cpu_tb/D_signal" type="array">
       <obj_property name="ElementShortName">D_signal[3:0]</obj_property>
       <obj_property name="ObjectShortName">D_signal[3:0]</obj_property>
@@ -40,6 +40,10 @@
       <obj_property name="ElementShortName">address_register[0:3][11:0]</obj_property>
       <obj_property name="ObjectShortName">address_register[0:3][11:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/cpu_tb/procesor/register_bank" type="array">
+      <obj_property name="ElementShortName">register_bank[15:0][3:0]</obj_property>
+      <obj_property name="ObjectShortName">register_bank[15:0][3:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/cpu_tb/procesor/current_state" type="other">
       <obj_property name="ElementShortName">current_state</obj_property>
       <obj_property name="ObjectShortName">current_state</obj_property>
@@ -55,6 +59,22 @@
    <wvobject fp_name="/cpu_tb/procesor/accumulator" type="array">
       <obj_property name="ElementShortName">accumulator[3:0]</obj_property>
       <obj_property name="ObjectShortName">accumulator[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cpu_tb/procesor/long_instr" type="logic">
+      <obj_property name="ElementShortName">long_instr</obj_property>
+      <obj_property name="ObjectShortName">long_instr</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cpu_tb/procesor/carry_flag" type="logic">
+      <obj_property name="ElementShortName">carry_flag</obj_property>
+      <obj_property name="ObjectShortName">carry_flag</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cpu_tb/procesor/src_active" type="logic">
+      <obj_property name="ElementShortName">src_active</obj_property>
+      <obj_property name="ObjectShortName">src_active</obj_property>
+   </wvobject>
+   <wvobject fp_name="/cpu_tb/procesor/src_addr" type="array">
+      <obj_property name="ElementShortName">src_addr[2:0]</obj_property>
+      <obj_property name="ObjectShortName">src_addr[2:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/cpu_tb/procesor/bus_in" type="array">
       <obj_property name="ElementShortName">bus_in[3:0]</obj_property>
