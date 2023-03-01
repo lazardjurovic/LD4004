@@ -60,7 +60,7 @@ signal OPA, OPR : std_logic_vector(3 downto 0);
 signal long_instr : std_logic := '0';  -- signal indicating that instruction takes 2 bytes
 signal high_bits : std_logic_vector(3 downto 0) := (others => '0'); -- content of OPA register for 2 byte instrucitons
 signal src_active : std_logic := '0';
-signal src_addr : std_logic_vector(2 downto 0);
+signal src_addr : std_logic_vector(2 downto 0) := (others => '0');
 
 signal carry_flag: std_logic := '0';
 signal accumulator : std_logic_vector(3 downto 0) := (others => '0');
@@ -129,13 +129,13 @@ begin
     
     -- GENERATING TRI-STATE BUS OUTPUTS   
    bus_out <= address_register(0)(3 downto 0) when current_state = A1 else
-   address_register(0)(7 downto 4) when current_state = A2 else
-   address_register(0)(11 downto 8) when current_state = A3 else "ZZZZ";
+               address_register(0)(7 downto 4) when current_state = A2 else
+               address_register(0)(11 downto 8) when current_state = A3 else 
+               src_addr&'0' when (current_state = X2) else --and src_active = '1') else
+               src_addr&'1' when (current_state = X3) else "ZZZZ";--and src_active = '1') else "ZZZZ";
     
  -- TRI-STATE LOGIC FOR INOUT PORT
-    D <= bus_out when ((current_state = A1 or current_state = A2 or current_state = A3)) else
-         src_addr&'0' when (current_state = X2 and src_active = '1') else
-         src_addr&'1' when (current_state = X3 and src_active = '1') else "ZZZZ";
+    D <= bus_out;
     bus_in <= D when(current_state = M1 or current_state = M2) else "ZZZZ";
     
     OPR <= bus_in when current_state = M1 and falling_edge(clk_f2); 
