@@ -117,11 +117,11 @@ begin
     
     end process;       
     
-    long_instr_process : process(long_instr, RESET)
+    long_instr_process : process(long_instr, RESET,current_state)
     begin
         if(RESET = '0') then
             high_bits <= (others => '0');
-        elsif(current_state = M2 and long_instr = '1') then
+        elsif(current_state = X1 and long_instr = '1') then
             high_bits <= OPA;
         else null;
         end if;
@@ -236,7 +236,7 @@ begin
                                 if((unsigned(accumulator)+6) > 15) then
                                     carry_flag <= '1';
                                 end if;  
-                            when "1001" => -- TSC
+                            when "1001" => -- TCS
                                 if(carry_flag = '0') then
                                     accumulator <= "1001";
                                 else
@@ -255,14 +255,32 @@ begin
     --                when "0001" => -- JCN
     --                when "0111" => -- ISZ
     --                when "0010" => -- FIM   
-   -- RAM IO INSTRUCTIONS  
-              
---                    when "1110" =>  
                     when others => null;
                 end case; -- OPR CASE
                 
-            else null;
-            end if;
+            elsif(current_state = X2) then
+                if(OPR = "1110") then
+                    
+--                    case OPA is
+--                        when "1001" => --RDM
+--                        when "1100" => --RD0
+--                        when "1101" => --RD1
+--                        when "1110" => --RD2
+--                        when "1111" => --RD3
+--                        when "1010" => --RDR
+--                        when "0000" => --WRM
+--                        when "0100" => --WR0
+--                        when "0101" => --WR1
+--                        when "0110" => --WR2
+--                        when "0111" => --WR3
+--                        when "0001" => --WMP
+--                        when "1011" => --ADM
+--                        when "1000" => --SBM
+--                    end case;
+                    
+                end if;
+            
+            end if; -- END IF FOR CURRENT STATE`
        end if;
         
     end process;

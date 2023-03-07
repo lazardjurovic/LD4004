@@ -1,0 +1,29 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Tue Mar  7 22:08:19 2023
+# Process ID: 22136
+# Current directory: C:/Users/lazar/LD4004
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent28820 C:\Users\lazar\LD4004\LD4004.xpr
+# Log file: C:/Users/lazar/LD4004/vivado.log
+# Journal file: C:/Users/lazar/LD4004\vivado.jou
+# Running On: Lazar, OS: Windows, CPU Frequency: 2296 MHz, CPU Physical cores: 12, Host memory: 14877 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/lazar/LD4004/LD4004.xpr
+update_compile_order -fileset sources_1
+launch_simulation
+launch_simulation
+open_wave_config C:/Users/lazar/LD4004/cpu_tb_behav_old.wcfg
+source cpu_tb.tcl
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+relaunch_sim
+restart
+run 2000 ns
+restart
+run 2000 ns
+relaunch_sim
