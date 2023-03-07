@@ -233,7 +233,8 @@ begin
                         -- when "0101" => -- JMS
                         -- when "0001" => -- JCN
                         -- when "0111" => -- ISZ
-                        -- when "0010" => -- FIM 
+                    when "0010" => -- FIM
+                            long_instr <= '1'; 
                     when others => null;
                 end case; -- OPR CASE
  
