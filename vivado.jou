@@ -27,3 +27,6 @@ run 2000 ns
 restart
 run 2000 ns
 relaunch_sim
+synth_design -rtl -rtl_skip_mlo -name rtl_1
+synth_design -rtl -rtl_skip_mlo -name rtl_1
+close_sim

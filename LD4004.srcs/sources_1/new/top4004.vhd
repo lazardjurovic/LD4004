@@ -72,7 +72,7 @@ begin
         if (RESET = '0') then -- Reseting current state
             address_register <= (others => (others => '0'));
         else
-            if (rising_edge(clk_f2) and current_state = X3) then -- Program counter is updated in fetch phase
+            if (rising_edge(clk_f2) and current_state = M1) then 
                 address_register(0) <= std_logic_vector(unsigned(address_register(0)) + to_unsigned(1, 12)); 
             end if;
  
@@ -91,6 +91,11 @@ begin
                 -- (possibly M2)
                 address_register(0) <= high_bits & OPR & OPA;
             end if;
+            
+            if(current_state = M2 and rising_edge(clk_f2) and OPR = "1100") then -- BBL
+                address_register(0) <= address_register(1); -- top of stack pushed into program counter
+            end if;
+            
         end if;
  
     end process; 
@@ -176,7 +181,8 @@ begin
                         long_instr                               <= '0';
                         src_active                               <= '0';
                         register_bank(to_integer(unsigned(OPA))) <= std_logic_vector(unsigned(register_bank(to_integer(unsigned(OPA)))) + 1);
-                        -- when "1100" => -- BBL 
+                         when "1100" => -- BBL 
+                            accumulator <= OPA;
                     when "0010" => -- SRC
                         src_active <= '1';
                         src_addr   <= OPA(3 downto 1);
@@ -233,8 +239,8 @@ begin
                         -- when "0101" => -- JMS
                         -- when "0001" => -- JCN
                         -- when "0111" => -- ISZ
-                    when "0010" => -- FIM
-                            long_instr <= '1'; 
+                    --when "0010" => -- FIM
+                            --long_instr <= '1'; 
                     when others => null;
                 end case; -- OPR CASE
  
