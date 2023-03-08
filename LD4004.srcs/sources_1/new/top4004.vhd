@@ -157,7 +157,9 @@ begin
                         accumulator <= register_bank(to_integer(unsigned(OPA)));
                         long_instr  <= '0';
                         src_active  <= '0';
-                        -- when "1011" => -- XCH
+                    when "1011" => -- XCH;
+                        accumulator <= std_logic_vector((unsigned(register_bank(to_integer(unsigned(OPA))))));
+                        register_bank(to_integer(unsigned(OPA))) <= accumulator; 
                     when "1000" => -- ADD
                         long_instr  <= '0';
                         src_active  <= '0';

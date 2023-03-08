@@ -76,12 +76,13 @@ begin
    -- "1000" after 530ns, "0001" after 550ns, "ZZZZ" after 570ns, -- ADD (ACC <- R1 + ACC) = 5
     "0100" after 690ns, "1111" after 710ns, "ZZZZ" after 730ns, -- JUN 0xF
     "1111" after 850ns, "ZZZZ" after 890ns, -- 0xFF for jun
-    "0110" after 1010ns,"0001" after 1030ns, "ZZZZ" after 1050ns, --INC R1
-    "1100" after 1170ns, "1111" after 1190ns, "ZZZZ" after 1210ns; -- BBL 0xF
+    "0110" after 1010ns, "0001" after 1030ns, "ZZZZ" after 1050ns, --INC R1
+    "1100" after 1170ns, "1111" after 1190ns, "ZZZZ" after 1210ns, -- BBL 0xF
+    "1011" after 1330ns, "0001" after 1350ns, "ZZZZ" after 1370ns; -- XCH 0x01
     
     clk_f1_s <= '1';
     TEST_s <= '0';
-    RESET_s<= '1', '0' after 1330ns;
+    RESET_s<= '1', '0' after 1490ns;
 
      
 wait;
